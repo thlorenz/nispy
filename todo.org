@@ -1,0 +1,8 @@
+#+TITLE: nispy, Smallish elisp scripts to do nifty things in Emacs
+
+* Converting GoodReader PDF Annotations to org-mode Notes from Emacs using Elisp
+
+Working on an #Emacs #Lisp script that converts annotations collected from PDF books with GoodReader
+into org-mode notes.
+
+

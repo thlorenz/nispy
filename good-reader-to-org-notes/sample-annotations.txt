@@ -1,0 +1,929 @@
+File: Practical_Common_Lisp.pdf
+
+Annotation summary:
+
+--- Page 45 ---
+
+Highlight:
+Practical: A Simple Database
+
+
+--- Page 46 ---
+
+Underline:
+property list, or plist
+
+Underline:
+(list :a 1 :b 2 :c 3)
+
+Underline:
+GETF, which takes a plist and a symbol and returns the value in the plist
+
+Underline:
+(getf (list :a 1 :b 2 :c 3) :a)
+
+
+--- Page 47 ---
+
+Underline:
+global variable, *db*, which you can define with the DEFVAR macro
+
+Underline:
+(defvar *db* nil)
+
+Underline:
+(defun add-record (cd) (push cd *db*))
+
+
+--- Page 48 ---
+
+Underline:
+(dolist (cd *db*)    (format t "~{~a:~10t~a~%~}~%" cd))
+
+Underline:
+~a directive is the aesthetic directive
+
+Underline:
+consume one argument and output it in a human-readable form
+
+
+--- Page 49 ---
+
+Underline:
+~t directive is for tabulating
+
+
+--- Page 53 ---
+
+Underline:
+#' is shorthand for “Get me the function with the following name.”
+
+Underline:
+#'(lambda (x) (= 0 (mod x 2)))
+
+
+--- Page 54 ---
+
+Underline:
+#'(lambda (cd) (equal (getf cd :artist) "Dixie Chicks")) *db*)
+
+
+--- Page 55 ---
+
+Underline:
+(defun foo (&key a b c) (list a b c))
+
+Underline:
+(foo :a 1 :b 2 :c 3) → (1 2 3)
+
+
+--- Page 56 ---
+
+Underline:
+(&key a (b 20) (c 30 c-p))
+
+Underline:
+(foo :a 1 :c 3)      → (1 20 3 T)
+
+
+--- Page 59 ---
+
+Underline:
+Lisp compiler passes the arguments, unevaluated, to the macro code
+
+Underline:
+returns a new Lisp expression that is then evaluated in place of the original macro call.
+
+Underline:
+(defmacro backwards (expr) (reverse expr))
+
+
+--- Page 60 ---
+
+Underline:
+macro code—the code that generates the new expression—runs at compile time
+
+Underline:
+stop Lisp from evaluating a form: stick a single forward quote (') in front of it
+
+Underline:
+back quote (`) before an expression stops evaluation just like a forward quote
+
+Underline:
+any subexpression that's preceded by a comma is evaluated
+
+
+--- Page 61 ---
+
+Underline:
+`(equal (getf cd ,field) ,value)
+
+Underline:
+Using a back quote to make a template
+
+Underline:
+,@ “splices” the value of the following expression
+
+Underline:
+must evaluate to a list—into the enclosing list.
+
+Underline:
+`(and ,(list 1 2 3))  → (AND (1 2 3))
+
+Underline:
+`(and ,@(list 1 2 3)) → (AND 1 2 3)
+
+Underline:
+also use ,@ to splice into the middle of a list
+
+Underline:
+`(and ,@(list 1 2 3) 4) →  (AND 1 2 3 4)
+
+Underline:
+&rest in its parameter list, a func-tion or macro can take an arbitrary number of arguments
+
+
+--- Page 62 ---
+
+Underline:
+pass MACROEXPAND-1, a form representing a macro call
+
+
+--- Page 63 ---
+
+Highlight:
+Syntax and Semantics
+
+
+--- Page 64 ---
+
+Underline:
+Common Lisp defines two black boxes
+
+Underline:
+called the reader, and the second is called the evaluator
+
+Underline:
+reader defines how strings of characters can be translated into Lisp objects called s-expressions
+
+Underline:
+evaluator then defines a syntax of Lisp forms that can be built out of s-expressions
+
+
+--- Page 65 ---
+
+Underline:
+you can generate code by manipulating existing data
+
+Highlight:
+S-expressions
+
+Underline:
+elements of s-expressions are lists and atoms
+
+Underline:
+elements of lists are themselves s-expressions
+
+
+--- Page 66 ---
+
+Underline:
+Strings literals
+
+Underline:
+enclosed in double quotes
+
+Underline:
+backslash (\) escapes the next character
+
+Underline:
+Names used in Lisp programs, such as FORMAT and hello-world, and *db*
+
+Underline:
+represented by objects called symbols
+
+Underline:
+reader converts all unescaped characters in a name to their uppercase equivalents
+
+
+--- Page 67 ---
+
+Underline:
+global variables are given names that start and end with *
+
+Underline:
+constants are given names starting and ending in +
+
+Underline:
+particularly low-level functions with names that start with % or even %%
+
+Highlight:
+S-expressions As Lisp Forms
+
+Underline:
+Any atom—any nonlist or the empty list—is a legal Lisp form
+
+Underline:
+as is any list that has a symbol as its first element
+
+
+--- Page 68 ---
+
+Underline:
+symbol, evaluated as a form, is considered the name of a variable
+
+Underline:
+evaluates to the current value of the variable
+
+Underline:
+self-evaluating objects
+
+Underline:
+passed to the notional evaluation function, it's simply returned
+
+Underline:
+keyword symbols—symbols whose names start with :
+
+Underline:
+defines a constant variable with the name and with the symbol as the value
+
+Underline:
+three kinds of forms as function call forms, macro forms, and special forms
+
+Highlight:
+Function Calls
+
+Underline:
+evaluate the remaining elements of the list as Lisp forms
+
+Underline:
+pass the resulting values to the named function
+
+Underline:
+(function-name argument*)
+
+
+--- Page 69 ---
+
+Highlight:
+Special Operators
+
+Underline:
+not all operations can be defined as functions
+
+Underline:
+all the arguments to a function are evaluated before the function is called
+
+Underline:
+(if test-form then-form [ else-form ])
+
+Underline:
+test-form will always be evaluated
+
+Underline:
+then one or the other of the then-form or else-form
+
+Underline:
+(quote (+ 1 2))
+
+
+--- Page 70 ---
+
+Underline:
+'(+ 1 2)
+
+Underline:
+LET, which is used to create new variable bindings
+
+Underline:
+(let ((x 10)) x)
+
+Highlight:
+Macros
+
+Underline:
+give users of the language a way to extend its syntax
+
+Underline:
+macro is a function that takes s-expressions as arguments
+
+Underline:
+returns a Lisp form that's then evalu-ated in place of the macro form
+
+Underline:
+elements of the macro form are passed, unevaluated, to the macro function
+
+Underline:
+form returned by the macro function—called its expansion
+
+Underline:
+evaluated according to the normal evaluation rules
+
+
+--- Page 71 ---
+
+Underline:
+macros generate their expansion at compile time
+
+Underline:
+providing a hook into the compiler
+
+Highlight:
+Truth, Falsehood, and Equality
+
+Underline:
+NIL is the only false value, and everything else is true
+
+Underline:
+symbol T is the canonical true value
+
+Underline:
+used when you need to return a non-NIL value
+
+
+--- Page 72 ---
+
+Underline:
+nil, (), 'nil, and '() all evaluate to the same thing
+
+Underline:
+both t and 't will evaluate to the same thing
+
+Underline:
+four “generic” equality predicates
+
+Underline:
+in order of discrimination, EQ, EQL, EQUAL, and EQUALP.
+
+Underline:
+EQ tests for “object identity”
+
+Underline:
+never use EQ to compare values that may be numbers or characters
+
+Underline:
+(eql 1 1) is guaranteed to be true
+
+Underline:
+(eql 1 1.0) is guaranteed to be false 
+
+Underline:
+integer value 1 and the floating-point value are instances of different classes
+
+
+--- Page 73 ---
+
+Underline:
+EQUAL loosens the discrimination of EQL
+
+Underline:
+lists equivalent if they have the same structure and contents, recursively
+
+Underline:
+considers strings equiva-lent if they contain the same characters
+
+Underline:
+looser definition of equivalence than 
+
+EQL for bit vectors and pathnames
+
+Underline:
+EQUALP is similar to EQUAL except it's even less discriminating
+
+Underline:
+contain the same characters, ignoring differences in case
+
+Underline:
+two characters equivalent if they differ only in case
+
+Underline:
+(equalp 1 1.0) is true
+
+Underline:
+Lists with EQUALP 
+
+elements are EQUALP
+
+Underline:
+arrays with EQUALP elements are EQUALP
+
+Highlight:
+Formatting Lisp Code
+
+Underline:
+important to reading and writing code fluently and idiomatically
+
+Underline:
+indentation should reflect the structure of the code
+
+Underline:
+items at the same level of nesting are lined up
+
+
+--- Page 74 ---
+
+Underline:
+closing parentheses are always put on the same line as the last element of the list they're closing
+
+
+--- Page 75 ---
+
+Underline:
+;;;; Four semicolons are used for a file header comment
+
+Underline:
+;;; A comment with three semicolons will usually be a paragraph
+
+Underline:
+;; Two semicolons indicate this comment applies to the code
+
+Underline:
+; this comment applies to this line only
+
+
+--- Page 77 ---
+
+Highlight:
+Defining New Functions
+
+Underline:
+using the DEFUN macro
+
+Underline:
+(defun name (parameter*)  "Optional documentation string."  body-form*)
+
+
+--- Page 78 ---
+
+Underline:
+Any symbol can be used as a function name
+
+Underline:
+might be called string->widget
+
+Underline:
+string literal follows the parameter list, it's a documentation string
+
+Underline:
+can later be obtained using the DOCUMENTATION 
+
+function
+
+Underline:
+body of a DEFUN consists of any number of Lisp expressions
+
+Underline:
+value of the last expression is returned as the value of the function
+
+Underline:
+RETURN-FROM special operator can be used to return immediately from anywhere
+
+
+--- Page 79 ---
+
+Highlight:
+Optional Parameters
+
+
+--- Page 80 ---
+
+Underline:
+symbol &optional followed by the names of the optional parameter
+
+Underline:
+(a b &optional c d)
+
+Underline:
+specify the default value by replacing the parameter name with a list containing a name and an expression
+
+Underline:
+(a &optional (b 10))
+
+Underline:
+compute a default value based on other parameters
+
+Underline:
+default-value expression can refer to parameters that occur earlier in the parameter list
+
+Underline:
+(width &optional (height width))
+
+Underline:
+can add another variable name to the parameter specifier after the default-value expression
+
+Underline:
+bound to true if the caller actually supplied an argument for this parameter
+
+Underline:
+(a b &optional (c 3 c-supplied-p))
+
+
+--- Page 81 ---
+
+Highlight:
+Rest Parameters
+
+Underline:
+take a variable number of arguments
+
+Underline:
+gathered up into a list that becomes the value of the 
+
+&rest parameter
+
+Underline:
+(defun + (&rest numbers) ...)
+
+
+--- Page 82 ---
+
+Highlight:
+Keyword Parameters
+
+Underline:
+&key and then any number of keyword parameter specifiers
+
+Underline:
+work like optional parameter specifiers
+
+Underline:
+(defun foo (&key a b c) (list a b c))
+
+Underline:
+each keyword parameters is bound to the value immediately following a keyword
+
+Underline:
+(foo :a 1 :b 2 :c 3)
+
+Underline:
+can provide a default value form and the name of a supplied-p variabl
+
+Underline:
+&key (a 0) (b 0 b-supplied-p)
+
+Underline:
+specify the parameter to be different from the name of the actual parameter
+
+
+--- Page 83 ---
+
+Underline:
+&key ((:apple a)) ((:box b) 0)
+
+Underline:
+not, however, very frequently used
+
+Highlight:
+Mixing Different Parameter Types
+
+Underline:
+first the names of the required parameters
+
+Underline:
+then the optional parameters, then the rest parameter
+
+Underline:
+finally the keyword parameters
+
+Underline:
+Combining &optional and &key parameters
+
+Underline:
+should probably avoid it altogether
+
+
+--- Page 84 ---
+
+Highlight:
+Function Return Values
+
+Underline:
+RETURN-FROM special operator to immediately return any value from the function
+
+Underline:
+not tied to functions
+
+Underline:
+return from a block of code defined with the BLOCK special operator
+
+Underline:
+DEFUN auto-matically wraps the whole function body in a block
+
+Underline:
+RETURN-FROM with the name of the function and the value you want to return
+
+
+--- Page 85 ---
+
+Underline:
+(defun foo (n)
+
+Underline:
+(return-from foo (list i j))
+
+Highlight:
+Functions As Data, a.k.a. Higher-Order Functions
+
+Underline:
+functions are just another kind of object
+
+Underline:
+special operator FUNCTION provides the mechanism for getting at a function object
+
+
+--- Page 86 ---
+
+Underline:
+(function foo)
+
+Underline:
+syntactic sugar for FUNCTION
+
+Underline:
+#'foo
+
+Underline:
+invoking a function through a function object: FUNCALL and APPLY
+
+Underline:
+FUNCALL is the one to use when you know the number of arguments
+
+Underline:
+(funcall #'foo 1 2 3)
+
+
+--- Page 87 ---
+
+Underline:
+APPLY can also accept “loose” arguments as long as the last argument is a list
+
+Underline:
+(apply #'plot #'exp plot-data)
+
+Highlight:
+Anonymous Functions
+
+Underline:
+create an “anonymous” function using a LAMBDA expression
+
+Underline:
+(lambda (parameters) body)
+
+
+--- Page 88 ---
+
+Underline:
+can use a 
+
+LAMBDA expression in the place of a function name with #'
+
+Underline:
+(funcall #'(lambda (x y) (+ x y)) 2 3) → 5
+
+Underline:
+previous FUNCALL expression more concisely
+
+Underline:
+((lambda (x y) (+ x y)) 2 3) → 5
+
+Underline:
+almost never done; it's merely worth noting
+
+Underline:
+to emphasize that 
+
+LAMBDA expressions can be used anywhere a normal function name can be
+
+
+--- Page 89 ---
+
+Underline:
+(plot #'(lambda (x) (* 2 x)) 0 10 1)
+
+Underline:
+LAMBDA expressions is in making closures
+
+Underline:
+capture part of the environment where they're created
+
+
+--- Page 91 ---
+
+Highlight:
+Variable Basics
+
+Underline:
+variable can hold values of any type
+
+Underline:
+values carry type information that can be used to check types at runtime
+
+Underline:
+dynamically typed—type errors are detected dynami-cally
+
+
+--- Page 92 ---
+
+Underline:
+binding is the runtime manifestation of a variable
+
+Underline:
+As with all Common Lisp variables, function parameters hold object references
+
+Underline:
+introduces new variables is the LET special operator
+
+Underline:
+(let (variable*)  body-form*)
+
+Underline:
+initialization form is either a list containing a variable name and an initial value
+
+Underline:
+initializing the variable to NIL—a plain variable name
+
+Underline:
+(let ((x 10) (y 20) z)  ...)
+
+
+--- Page 93 ---
+
+Underline:
+LET form is evaluated, all the initial value forms are first evaluated
+
+Underline:
+bindings are created and initialized to the appropriate initial values
+
+Underline:
+body forms are executed
+
+Underline:
+Within the body of the LET, the variable names refer to the newly created bindings
+
+Underline:
+value of the last expression in the body is returned
+
+Underline:
+variables introduced with LET are rebound each time the LET is entered
+
+Underline:
+scope of function parameters and LET variables
+
+Underline:
+delimited by the form that introduces the variable
+
+Underline:
+called the binding form
+
+Underline:
+innermost variable shadows the outer bindings
+
+
+--- Page 94 ---
+
+Underline:
+in a LET*, the initial value forms for each variable can refer to variables introduced earlier in the variables list
+
+Underline:
+let* ((x 10)      (y (+ x 10)))
+
+Underline:
+could achieve the same result with nested LETs
+
+Underline:
+let ((x 10))  (let ((y (+ x 10)))
+
+Highlight:
+Lexical Variables and Closures
+
+
+--- Page 95 ---
+
+Underline:
+closure can not only access the value of the variables it closes over
+
+Underline:
+can also assign new values that will persist between calls to the closure
+
+Highlight:
+Dynamic, a.k.a. Special, Variables
+
+Underline:
+two ways to create global variables: DEFVAR and DEFPARAMETER
+
+Underline:
+can be used anywhere to refer to the current binding of the global variable
+
+
+--- Page 96 ---
+
+Underline:
+(defvar *count* 0  "Count of widgets made so far.")
+
+Underline:
+(defparameter *gap-tolerance* 0.001  "Tolerance to be allowed in widget gaps.")
+
+Underline:
+DEFPARAMETER always assigns the initial value to the named variable
+
+Underline:
+DEFVAR does so only if the variable is undefined
+
+Underline:
+used with no initial value to define a global variable without giving it a value
+
+Underline:
+said to be unbound
+
+
+--- Page 97 ---
+
+Underline:
+bind a dynamic variable—for example, with a LET variable or a function parameter
+
+Underline:
+on entry to the binding form replaces the global binding for the duration of the binding form
+
+Underline:
+let ((*standard-output* *some-other-stream*))  (stuff))
+
+Underline:
+code that runs as a result of the call to stuff, references to *standard-output* will use the binding established by the LET
+
+Underline:
+control leaves the LET, the new binding of *standard-output* will go away
+
+Underline:
+most recently estab-lished binding shadows all other bindings
+
+Underline:
+reference to a global variable will find the binding most recently established in the current thread
+
+
+--- Page 98 ---
+
+Underline:
+assigning a new value affects only the current binding
+
+
+--- Page 99 ---
+
+Underline:
+variable defined with DEFVAR and DEFPARAMETER is auto-matically declared globally special
+
+Underline:
+in a binding form, you declare a name special
+
+Underline:
+binding created for that variable will be dynamic rather than lexical
+
+
+--- Page 100 ---
+
+Highlight:
+Constants
+
+Underline:
+constants are global and are defined with DEFCONSTANT
+
+Underline:
+(defconstant name initial-value-form [ documentation-string ])
+
+Underline:
+convention of using names starting and ending with + for constants
+
+Highlight:
+Assignment
+
+Underline:
+assign a new value to a binding, you use the SETF macro
+
+Underline:
+(setf place value)
+
+Underline:
+SETF is a macro, it can examine the form of the place
+
+Underline:
+place is a variable, it expands into a call to the special operator SETQ
+
+Underline:
+special operator, has access to both lexical and dynamic bindings
+
+
+--- Page 101 ---
+
+Underline:
+SETF can also assign to multiple places in sequence
+
+Underline:
+(setf x 1 y 2)
+
+Underline:
+returns the newly assigned value, so you can also nest calls to SETF
+
+Underline:
+(setf x (setf y (random 10)))
+
+
+(report generated by GoodReader)
