@@ -5,6 +5,26 @@
 Working on an #Emacs #Lisp script that converts annotations collected from PDF books with GoodReader
 into org-mode notes.
 
+** Configuring Emacs for Elisp
+:LOGBOOK:
+CLOCK: [2020-05-24 Sun 14:33]--[2020-05-24 Sun 14:49] =>  0:16
+CLOCK: [2020-05-24 Sun 14:15]--[2020-05-24 Sun 14:29] =>  0:14
+:END:
+
+- [X] remove doc string requirement
+- [X] remove file header requirement
+
+*** Resources  
+
+- [[https://github.com/gonewest818/elisp-lint][elisp-lint]] 
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html][.dir-locals.el docs]]   
+- [[https://emacs.stackexchange.com/a/10854][add-dir-local-variable interactively (stackoverflow)]] used this to have the below added to our ~.dir-locals.el~
+
+#+BEGIN_SRC 
+((emacs-lisp-mode
+  (flycheck-disabled-checkers emacs-lisp-checkdoc)))
+#+END_SRC
+
 ** Get String Lines of Annotations
 
 :LOGBOOK:
@@ -93,6 +113,8 @@ CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
 #+END_SRC
 
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/List-Variables.html][lists pop/push]] 
+- [[http://www.gigamonkeys.com/book/macros-standard-control-constructs.html#dolist-and-dotimes][dolist+dotimes common lisp book]] 
+- [[http://www.gigamonkeys.com/book/macros-standard-control-constructs.html#do][more generic do]] 
 
 **** Regex 
 
@@ -123,3 +145,7 @@ May not need since most likely we'll copy this from outside Emacs.
 
 - [ ] collect page numbers and put them in front of every item
 - [ ] if possible link to a local PDF document
+
+*** Resources 
+
+- [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
