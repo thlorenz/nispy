@@ -1,9 +1,6 @@
 ;;; good-reader-to-org.el --- Converts Good Reader Annotations to Org Mode Notes -*- lexical-binding: t; -*-
-;;
-;; Copyright (C) 2020 Thorsten Lorenz
-;;
-;;; Commentary:
-;;; Code:
+
+(defconstant +HEADER+ "header")
 
 (defun non-empty-lines (annotations)
   "Pull out non-empty ANNOTATIONS lines."
@@ -15,25 +12,40 @@
   Practical: A Simple Database")
 
 (defun is-header-line (line)
-  "Determine if LINE is a header line."
   (if (string-match "^Highlight\:" line) t nil))
+
+(defun is-item-line (line)
+  (if (string-match "^Underline\:" line) t nil))
 
 (let ((header nil))
   (when header (pp "header")))
 
-(setq lines '("Highlight:" "Practical: A Simple Database"))
+(defun make-parse-entry (type data)
+  (list :type type :data data))
 
-;; TODO: dolist may work better here
-(defun parse-annotation-lines (list)
-  "Pull out header and item information from LIST."
-  (let ((acc) (header-is-next nil) (item-is-next nil) (current-page))
-    (while list
-      (when header-is-next (push (car list) acc))
-      (when (is-header-line (car list)) (setq header-is-next t))
-      (setq list (cdr list)))
-    acc))
 
-(parse-annotation-lines lines)
+(progn
+  (setq lines '(
+                "Highlight:"
+                "Practical: A Simple Database"
+                "Highlight:"
+                "Other Practical: A Simple Database"
+                ))
+  (defun parse-annotation-lines (list)
+    "Pull out header and item information from LIST."
+    (let ((acc) (header-is-next nil) (item-is-next nil) (current-page))
+      (nreverse
+       (dolist
+           (element list acc)
+         (cond (header-is-next
+                (progn
+                  (push (make-parse-entry "header" element) acc)
+                  (setq header-is-next nil)))
+               ((is-header-line (car list))
+                (setq header-is-next t)))
+         ))))
+  (parse-annotation-lines lines))
+
 
 
 (provide 'good-reader-to-org)

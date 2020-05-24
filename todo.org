@@ -89,13 +89,15 @@ Working Solution.
 
 ** Extract Header Information
 :LOGBOOK:
+CLOCK: [2020-05-24 Sun 14:59]--[2020-05-24 Sun 15:41] =>  0:42
 CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
 :END:
 
 - [X] set flag awaiting header when we see ~Highlight:~
 - [X] add header to list
-- [ ] unset flag awaiting header 
-- [ ] push header onto list
+- [X] unset flag awaiting header 
+- [X] push header onto list
+- [X] reverse list before returning it
 
 *** Resources
 
@@ -127,6 +129,9 @@ CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
 #+END_SRC
 
 ** Extract Item Information
+:LOGBOOK:
+CLOCK: [2020-05-24 Sun 15:41]
+:END:
 
 - [ ] proceed similarly as for header
 - [ ] identify code segments, i.e. if it contains ~()~ 
