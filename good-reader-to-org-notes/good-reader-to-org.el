@@ -27,11 +27,15 @@
 (defun parse-annotation-lines (list)
   "Pull out header and item information from LIST."
   (let ((acc) (header-is-next nil) (item-is-next nil) (current-page))
-    (while list
-      (when header-is-next (push (car list) acc))
-      (when (is-header-line (car list)) (setq header-is-next t))
-      (setq list (cdr list)))
-    acc))
+    (dolist (element list acc)
+       (when (is-header-line element) (push element acc)))))
+
+(defun parse-annotation-lines-2 (list)   ;; just an alternative version
+  "Pull out header and item information from LIST."
+  (let ((header-is-next nil) (item-is-next nil) (current-page))
+    (seq-filter #'is-header-line list)))
+
+
 
 (parse-annotation-lines lines)
 
