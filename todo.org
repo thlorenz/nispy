@@ -6,22 +6,26 @@ Working on an #Emacs #Lisp script that converts annotations collected from PDF b
 into org-mode notes.
 
 ** Get String Lines of Annotations
+
 :LOGBOOK:
-CLOCK: [2020-05-23 Sat 18:46]
+CLOCK: [2020-05-23 Sat 18:46]--[2020-05-23 Sat 19:21] =>  0:35
 :END:
 
 - [X] split into lines
 - [X] remove empty lines
-- [ ] possibly get from clipboard -> we can then add result to clipboard
+- [X] get string from clipboard
+- [X] add result string to clipboard
 
 *** Resources
 
 **** Filter Empty Lines
 
-- [[https://stackoverflow.com/a/1019821][detect empty string]] 
+- [[https://stackoverflow.com/a/1019821][detect empty string]], [[https://stackoverflow.com/a/52878402][string-emtpy-p]] 
 
 #+BEGIN_SRC lisp
 (string= "" user-str)
+(string-empty-p " ") ;; => nil
+(string-blank-p " ") ;; => 0
 #+END_SRC
 
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Sequence-Functions.html][sequences]] 
@@ -30,13 +34,75 @@ CLOCK: [2020-05-23 Sat 18:46]
 (seq-filter (lambda (elt) (> elt 0)) [1 -1 3 -3 5])
 #+END_SRC
 
-** Extract Header Information
+**** Clipboard Interaction
 
-- [ ] set flag awaiting header when we see ~Highlight:~
-- [ ] add header to list
+Working Solution.
+
+#+BEGIN_SRC lisp
+(gui-get-selection 'CLIPBOARD)
+(gui-set-selection 'CLIPBOARD "hello clippy")
+#+END_SRC
+
+***** String from Clipboard
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Low_002dLevel-Kill-Ring.html][current-kill-doc]] 
+- [[https://emacs.stackexchange.com/a/51874][current-kill-stackoverflow]] 
+
+#+BEGIN_SRC lisp
+(setq zwischenablage (current-kill 0 t))
+(gui-get-selection 'CLIPBOARD)
+#+END_SRC
+
+***** String to Clipboard
+
+- [[https://stackoverflow.com/a/51515731][kill-new]] 
+- [[https://stackoverflow.com/a/51520638][gui-set-selection]] 
+  
+#+BEGIN_SRC lisp
+(kill-new "this is copied to clipboard")
+
+;; without affecting the kill-ring
+;; without depending on the value of select-enable-clipboard 
+(gui-set-selection 'CLIPBOARD "copied to clipboard from Emacs")
+#+END_SRC
+
+
+** Extract Header Information
+:LOGBOOK:
+CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
+:END:
+
+- [X] set flag awaiting header when we see ~Highlight:~
+- [X] add header to list
 - [ ] unset flag awaiting header 
 - [ ] push header onto list
-  
+
+*** Resources
+
+**** List Traversal and Manipulation
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/eintr/dolist.html][dolist]] showing example for [[https://www.gnu.org/software/emacs/manual/html_node/eintr/while.html][while]] that we ended up using
+
+#+BEGIN_SRC lisp
+(defun reverse-list-with-while (list)
+  (let (value)
+    (while list
+      (setq value (cons (car list) value))
+      (setq list (cdr list)))
+    value))
+#+END_SRC
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/List-Variables.html][lists pop/push]] 
+
+**** Regex 
+
+- [[https://stackoverflow.com/a/3278574][string-match stackoverflow]] 
+
+#+BEGIN_SRC lisp
+(string-match "^Highlight\:" "Highlight:") ;; => 0
+(string-match "^Highlight\:" "Hghlight:") ;; => nil
+
+#+END_SRC
 
 ** Extract Item Information
 
@@ -44,6 +110,15 @@ CLOCK: [2020-05-23 Sat 18:46]
 - [ ] identify code segments, i.e. if it contains ~()~ 
 - [ ] wrap code segments to get them highlighed
 
+** HOLD Make [[*Clipboard Interaction][Clipboard Interaction]] Work in All Cases
+
+When text is copied from inside Emacs results contain additional info about copied text,.
+
+May not need since most likely we'll copy this from outside Emacs.
+
+- [ ] pull out text from result in those cases
+  
+  
 ** Extra Features
 
 - [ ] collect page numbers and put them in front of every item
