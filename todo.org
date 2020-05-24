@@ -134,8 +134,12 @@ CLOCK: [2020-05-24 Sun 15:41]--[2020-05-24 Sun 16:32] =>  0:51
 - [X] proceed similarly as for header
 - [X] identify code segments, i.e. if it contains ~()~ 
 
-** TODO Render List to Org Mode
+** Render List to Org Mode
+:LOGBOOK:
+CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
+:END:
 
+- [ ] render simple headers and list items
 - [ ] wrap code segments to get them highlighed
 - [ ] prefix page number for items 
 - [ ] translate page link using the actual page that the first page is on
