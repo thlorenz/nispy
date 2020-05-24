@@ -86,7 +86,6 @@ Working Solution.
 (gui-set-selection 'CLIPBOARD "copied to clipboard from Emacs")
 #+END_SRC
 
-
 ** Extract Header Information
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 14:59]--[2020-05-24 Sun 15:41] =>  0:42
@@ -125,16 +124,18 @@ CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
 #+BEGIN_SRC lisp
 (string-match "^Highlight\:" "Highlight:") ;; => 0
 (string-match "^Highlight\:" "Hghlight:") ;; => nil
-
 #+END_SRC
 
 ** Extract Item Information
 :LOGBOOK:
-CLOCK: [2020-05-24 Sun 15:41]
+CLOCK: [2020-05-24 Sun 15:41]--[2020-05-24 Sun 16:32] =>  0:51
 :END:
 
-- [ ] proceed similarly as for header
-- [ ] identify code segments, i.e. if it contains ~()~ 
+- [X] proceed similarly as for header
+- [X] identify code segments, i.e. if it contains ~()~ 
+
+*** TODO Render List to Org Mode
+
 - [ ] wrap code segments to get them highlighed
 
 ** HOLD Make [[*Clipboard Interaction][Clipboard Interaction]] Work in All Cases
