@@ -5,4 +5,46 @@
 Working on an #Emacs #Lisp script that converts annotations collected from PDF books with GoodReader
 into org-mode notes.
 
+** Get String Lines of Annotations
+:LOGBOOK:
+CLOCK: [2020-05-23 Sat 18:46]
+:END:
 
+- [X] split into lines
+- [X] remove empty lines
+- [ ] possibly get from clipboard -> we can then add result to clipboard
+
+*** Resources
+
+**** Filter Empty Lines
+
+- [[https://stackoverflow.com/a/1019821][detect empty string]] 
+
+#+BEGIN_SRC lisp
+(string= "" user-str)
+#+END_SRC
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Sequence-Functions.html][sequences]] 
+
+#+BEGIN_SRC lisp
+(seq-filter (lambda (elt) (> elt 0)) [1 -1 3 -3 5])
+#+END_SRC
+
+** Extract Header Information
+
+- [ ] set flag awaiting header when we see ~Highlight:~
+- [ ] add header to list
+- [ ] unset flag awaiting header 
+- [ ] push header onto list
+  
+
+** Extract Item Information
+
+- [ ] proceed similarly as for header
+- [ ] identify code segments, i.e. if it contains ~()~ 
+- [ ] wrap code segments to get them highlighed
+
+** Extra Features
+
+- [ ] collect page numbers and put them in front of every item
+- [ ] if possible link to a local PDF document
