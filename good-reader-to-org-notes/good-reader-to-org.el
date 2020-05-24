@@ -4,7 +4,6 @@
 (defconst *item+ "item")
 
 (defun non-empty-lines (annotations)
-  "Pull out non-empty ANNOTATIONS lines."
   (seq-filter (lambda (s) (not (string-empty-p s)))
               (split-string annotations "\n")))
 
@@ -23,36 +22,43 @@
   (or (has-lisp-code line)
       (has-algo-style-code line)))
 
-(defun make-parse-entry (type data)
+(defun make-parse-entry (type data page)
   (list :type type
         :data data
+        :page page
         :is-code: (and (equal *item+ type) (has-code data))))
 
-(pp
- (progn
-   (defun parse-annotation-lines (list)
-     "Pull out header and item information from LIST."
-     (let (acc (header-is-next nil) (item-is-next nil) (current-page))
-       (nreverse
-        (dolist
-            (element list acc)
-          (cond (header-is-next
-                 (push (make-parse-entry *header+ element) acc)
-                 (setq header-is-next nil))
+(defun is-page-line (line)
+  (if (string-match "--- Page \\([0-9]+\\) ---" line) t nil))
 
-                (item-is-next
-                 (progn
-                   (push (make-parse-entry *item+ element) acc)
-                   (setq item-is-next nil)))
+(defun parse-annotation-lines (list)
+  "Pull out header and item information from LIST."
+  (let (acc (header-is-next nil) (item-is-next nil) (current-page))
+    (nreverse
+     (dolist
+         (element list acc)
+       (cond (header-is-next
+              (push (make-parse-entry *header+ element current-page) acc)
+              (setq header-is-next nil))
 
-                ((is-header-line element)
-                 (setq header-is-next t))
+             (item-is-next
+              (progn
+                (push (make-parse-entry *item+ element current-page) acc)
+                (setq item-is-next nil)))
 
-                ((is-item-line element)
-                 (setq item-is-next t))
+             ((is-header-line element)
+              (setq header-is-next t))
 
-                )))))
-   (parse-annotation-lines lines)))
+             ((is-item-line element)
+              (setq item-is-next t))
+
+             ((is-page-line element)
+              (setq current-page
+                    (string-to-number
+                     (substring element (match-beginning 1)))))
+
+             )))))
+(parse-annotation-lines lines)
 
 
 (setq lines (non-empty-lines "
