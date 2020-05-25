@@ -31,6 +31,12 @@ end tell")
 (defun nispy--scroll-osx-preview-app-to-page (page)
   (do-applescript (format *apple-script-tempate+ page)))
 
+(defun nispy--matches-any-p (regexes string)
+  (if (position-if
+       (lambda (regex) (string-match regex string))
+       regexes)
+      t nil))
+
 (defun non-empty-lines (annotations)
   (seq-filter (lambda (s) (not (string-empty-p s)))
               (split-string annotations "\n")))
@@ -41,18 +47,20 @@ end tell")
 (defun is-item-line (line)
   (if (string-match "^Underline\:" line) t nil))
 
-(defun has-lisp-code (line)
-  (if (or (string-match "^[;(]" line)
-          (string-match "^#'" line)
-          (string-match "^`('" line)
-          (string-match "^'('" line)
-          ) t nil))
+
+(defun nispy--lisp-code-p (line)
+  (matches-any-p '(
+                   "^[;(]"
+                   "^#'"
+                   "^`("
+                   "^'("
+                   ) line ))
 
 (defun has-algo-style-code (line)
   (if (string-match "(^[{}])" line) t nil))
 
 (defun has-code (line)
-  (or (has-lisp-code line)
+  (or (nispy--lisp-code-p line)
       (has-algo-style-code line)))
 
 (defun is-header-entry (entry)
