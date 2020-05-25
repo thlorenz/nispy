@@ -99,8 +99,8 @@
     (setq entries (parse-annotation-lines lines))
     (setq org-mode-entries (map-entries-to-org-mode entries page-offset))
     (setq rendered-string (org-entries->string org-mode-entries))
-    (message "Formatted notes are in your clipboard.")
-    (gui-set-selection 'CLIPBOARD rendered-string)))
+    (gui-set-selection 'CLIPBOARD rendered-string)
+    (message "Formatted notes are in your clipboard.")))
 
 (provide 'good-reader-to-org)
 ;;; good-reader-to-org.el ends here
