@@ -99,8 +99,8 @@ end tell")
              (list :type *item+
                    :content (format
                              "- [[elisp:(nispy--scroll-osx-preview-app-to-page %d)][%d]] %s%s%s"
-                             (+ page-offset (getf entry :page))
                              (getf entry :page)
+                             (- (getf entry :page) page-offset)
                              code-indicator
                              (getf entry :data)
                              code-indicator)))))))
