@@ -1,5 +1,9 @@
 #+TITLE: nispy, Smallish elisp scripts to do nifty things in Emacs
 
+* Scrolling PDF Preview to Specific Page from within Emacs
+
+Working on elisp links that scroll the MacOS Preview app to the linked PDF page for our annotations to org-mode converter in Lisp.
+
 * Converting GoodReader PDF Annotations to org-mode Notes from Emacs using Elisp
 
 Working on an #Emacs #Lisp script that converts annotations collected from PDF books with GoodReader
@@ -86,7 +90,6 @@ Working Solution.
 (gui-set-selection 'CLIPBOARD "copied to clipboard from Emacs")
 #+END_SRC
 
-
 ** Extract Header Information
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 14:59]--[2020-05-24 Sun 15:41] =>  0:42
@@ -145,7 +148,6 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 - [X] translate page link using the actual page that the first page is on
 - [X] render simple headers and list items
 
-
 ** Extra Features
 
 - [X] collect page numbers and put them in front of every item
@@ -153,20 +155,40 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 - [X] use clipboard as input and copy rendered string to clipboard
 - [X] link to a local PDF document including page
   
+  
 ** Open Links to PDF
+:LOGBOOK:
+CLOCK: [2020-05-25 Mon 16:38]
+CLOCK: [2020-05-25 Mon 16:05]--[2020-05-25 Mon 16:34] =>  0:29
+:END:
 
 Write elisp function that when called with file name and page number openes the PDF file to the page. Then call it from the ~elisp:~ link.
 
-- [ ] figure out how to open pdf file to page with apple script
-- [ ] figure out how to call apple script from elisp
-- [ ] change page links to link to this ~elisp:~ invocation with correct page number
-- [ ] add option to pass in path to PDF file when running ~nispy-good-reader->org-mode~
+- [X] figure out how to open pdf file to page with apple script
+- [X] how do ~elisp:~ links work
+- [X] figure out how to call apple script from elisp
+- [X] change page links to link to ~elisp:~ invocation with correct page number
 
 *** Resources 
 
 - [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
 - [[https://orgmode.org/manual/External-Links.html][external links in org-mode]] (we'd use ~elisp:~ which executes an elisp command)
+- [[https://github.com/politza/pdf-tools#compiling-on-os-x][emacs pdf-tools]] not officially supported on macos and install is a bit hands on
+ 
   
+** Load Script automatically with Org Mode
+
+*** Resources 
+
+- [[https://github.com/rocky/emacs-load-relative][emacs load-relative package]] 
+- [[https://emacs.stackexchange.com/questions/3310/difference-between-load-file-and-load][load-file vs load]] 
+- [[https://www.emacswiki.org/emacs/LoadPath][emacs load path]] wiki entry
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Search.html][emacs library search]]   
+
+#+begin_quote
+You can also use .dir-locals-2.el; if found, Emacs loads it in addition to .dir-locals.el. This is useful when .dir-locals.el is under version control in a shared repository and can't be used for personal customizations.
+#+end_quote
+
 ** HOLD Make [[*Clipboard Interaction][Clipboard Interaction]] Work in All Cases
 
 When text is copied from inside Emacs results contain additional info about copied text,.

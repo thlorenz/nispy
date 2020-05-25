@@ -2,6 +2,34 @@
 
 (defconst *header+ "header")
 (defconst *item+ "item")
+(defconst *apple-script-tempate+ "
+set newPage to %d
+tell application \"System Events\"
+  tell process \"Preview\"
+    set frontmost to true
+    tell menu bar 1
+      tell menu \"go\"
+        click
+        tell menu item \"Go to Page…\"
+          click
+        end tell
+      end tell
+    end tell
+    tell window 1
+      tell sheet 1
+        tell text field 1
+          set value to (newPage as text)
+        end tell
+        tell button \"OK\"
+          click
+        end tell
+      end tell
+    end tell
+  end tell
+end tell")
+
+(defun nispy--scroll-osx-preview-app-to-page (page)
+  (do-applescript (format *apple-script-tempate+ page)))
 
 (defun non-empty-lines (annotations)
   (seq-filter (lambda (s) (not (string-empty-p s)))
@@ -69,12 +97,13 @@
           ((eq type *item+)
            (let ((code-indicator (if (getf entry :is-code) "~" "")))
              (list :type *item+
-                   :content (format "- [[%d][%d]] %s%s%s"
-                                    (getf entry :page)
-                                    (+ page-offset (getf entry :page))
-                                    code-indicator
-                                    (getf entry :data)
-                                    code-indicator)))))))
+                   :content (format
+                             "- [[elisp:(nispy--scroll-osx-preview-app-to-page %d)][%d]] %s%s%s"
+                             (+ page-offset (getf entry :page))
+                             (getf entry :page)
+                             code-indicator
+                             (getf entry :data)
+                             code-indicator)))))))
 
 (defun map-entries-to-org-mode (list page-offset)
   (mapcar (lambda (element) (map-entry-to-orgmode page-offset element)) list))
