@@ -181,7 +181,8 @@ CLOCK: [2020-05-25 Mon 17:08]--[2020-05-25 Mon 17:25] =>  0:17
 :END:
 
 - [X] format as code if starts with ~`(~, ~#'~, ~;~ or ~'(~
-- [ ] convert functions with duplicate code into macro invocations
+- [ ] create regex checker function
+- [ ] functions with duplicate code should use regex checker 
 - [ ] rename functions to be properly namespaced
 
 *** Resources 
