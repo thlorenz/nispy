@@ -151,11 +151,21 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 - [X] collect page numbers and put them in front of every item
 - [X] pass page offset to interactive function
 - [X] use clipboard as input and copy rendered string to clipboard
-- [ ] link to a local PDF document including page
+- [X] link to a local PDF document including page
+  
+** Open Links to PDF
+
+Write elisp function that when called with file name and page number openes the PDF file to the page. Then call it from the ~elisp:~ link.
+
+- [ ] figure out how to open pdf file to page with apple script
+- [ ] figure out how to call apple script from elisp
+- [ ] change page links to link to this ~elisp:~ invocation with correct page number
+- [ ] add option to pass in path to PDF file when running ~nispy-good-reader->org-mode~
 
 *** Resources 
 
 - [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
+- [[https://orgmode.org/manual/External-Links.html][external links in org-mode]] (we'd use ~elisp:~ which executes an elisp command)
   
 ** HOLD Make [[*Clipboard Interaction][Clipboard Interaction]] Work in All Cases
 
