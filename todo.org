@@ -158,7 +158,7 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
   
 ** Open Links to PDF
 :LOGBOOK:
-CLOCK: [2020-05-25 Mon 16:38]
+CLOCK: [2020-05-25 Mon 16:38]--[2020-05-25 Mon 17:08] =>  0:30
 CLOCK: [2020-05-25 Mon 16:05]--[2020-05-25 Mon 16:34] =>  0:29
 :END:
 
@@ -174,7 +174,19 @@ Write elisp function that when called with file name and page number openes the 
 - [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
 - [[https://orgmode.org/manual/External-Links.html][external links in org-mode]] (we'd use ~elisp:~ which executes an elisp command)
 - [[https://github.com/politza/pdf-tools#compiling-on-os-x][emacs pdf-tools]] not officially supported on macos and install is a bit hands on
- 
+
+** Improvements
+:LOGBOOK:
+CLOCK: [2020-05-25 Mon 17:08]--[2020-05-25 Mon 17:25] =>  0:17
+:END:
+
+- [X] format as code if starts with ~`(~, ~#'~, ~;~ or ~'(~
+- [ ] convert functions with duplicate code into macro invocations
+- [ ] rename functions to be properly namespaced
+
+*** Resources 
+
+- [[https://github.com/bbatsov/emacs-lisp-style-guide][elisp-style-guide]] 
   
 ** Load Script automatically with Org Mode
 

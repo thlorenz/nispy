@@ -42,7 +42,12 @@ end tell")
   (if (string-match "^Underline\:" line) t nil))
 
 (defun has-lisp-code (line)
-  (if (string-match "^[(]" line) t nil))
+  (if (or (string-match "^[;(]" line)
+          (string-match "^#'" line)
+          (string-match "^`('" line)
+          (string-match "^'('" line)
+          ) t nil))
+
 (defun has-algo-style-code (line)
   (if (string-match "(^[{}])" line) t nil))
 
