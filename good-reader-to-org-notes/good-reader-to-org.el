@@ -22,6 +22,9 @@
   (or (has-lisp-code line)
       (has-algo-style-code line)))
 
+(defun is-header-entry (entry)
+  (eq (getf entry :type) *header+))
+
 (defun make-parse-entry (type data page)
   (list :type type
         :data data
@@ -36,66 +39,75 @@
   (let (acc (header-is-next nil) (item-is-next nil) (current-page))
     (nreverse
      (dolist (element list acc)
-       (cond (header-is-next
-              (push (make-parse-entry *header+ element current-page) acc)
-              (setq header-is-next nil))
+       (cond
+        (header-is-next
+         (push (make-parse-entry *header+ element current-page) acc)
+         (setq header-is-next nil))
 
-             (item-is-next
-              (progn
-                (push (make-parse-entry *item+ element current-page) acc)
-                (setq item-is-next nil)))
+        (item-is-next
+         (progn
+           (push (make-parse-entry *item+ element current-page) acc)
+           (setq item-is-next nil)))
 
-             ((is-header-line element)
-              (setq header-is-next t))
+        ((is-header-line element)
+         (setq header-is-next t))
 
-             ((is-item-line element)
-              (setq item-is-next t))
+        ((is-item-line element)
+         (setq item-is-next t))
 
-             ((is-page-line element)
-              (setq current-page
-                    (string-to-number
-                     (substring element (match-beginning 1)))))
+        ((is-page-line element)
+         (setq current-page
+               (string-to-number
+                (substring element (match-beginning 1))))))))))
 
-             )))))
-
-(defun map-entry-to-orgmode (entry)
+(defun map-entry-to-orgmode (page-offset entry)
   (let ((type (getf entry :type)))
     (cond ((eq type *header+)
-           (format "* %s" (getf entry :data)))
+           (list :type *header+
+                 :content (format "* %s" (getf entry :data))))
 
           ((eq type *item+)
            (let ((code-indicator (if (getf entry :is-code) "~" "")))
-             (format "- %s%s%s"
-                     code-indicator
-                     (getf entry :data)
-                     code-indicator
-                     ))))))
+             (list :type *item+
+                   :content (format "- [[%d][%d]] %s%s%s"
+                                    (getf entry :page)
+                                    (+ page-offset (getf entry :page))
+                                    code-indicator
+                                    (getf entry :data)
+                                    code-indicator)))))))
+
+(defun map-entries-to-org-mode (list page-offset)
+  (mapcar (lambda (element) (map-entry-to-orgmode page-offset element)) list))
+
+(defun org-entries->string (entries)
+  (reduce (lambda
+            (acc entry)
+            (if (is-header-entry entry)
+                (format "%s\n%s\n\n"
+                        acc
+                        (getf entry :content))
+              (format "%s%s\n"
+                      acc
+                      (getf entry :content))))
+          entries :initial-value ""))
+
+(defun nispy-good-reader->org-mode ()
+  (interactive)
+  (let (original-string lines entries org-mode-entries rendered-string)
+    (setq original-string (gui-get-selection 'CLIPBOARD))
+    (setq lines (non-empty-lines original-string))
+    (setq entries (parse-annotation-lines lines))
+    (setq org-mode-entries (map-entries-to-org-mode entries 22))
+    (setq rendered-string (org-entries->string org-mode-entries))
+    (message "Formatted notes are in your clipboard.")
+    (gui-set-selection 'CLIPBOARD rendered-string)))
+
 
 ;;; Test
-(map-entry-to-orgmode item-entry)
-
 (setq parsed-entries (parse-annotation-lines lines))
-(setq header-entry
-      (list :type *header+
-            :data "Some header"
-            :page 12
-            :is-code nil))
 
-(setq item-entry
-      (list :type *item+
-            :data "(setq a 1)"
-            :page 111
-            :is-code t))
-
-(getf entry :type)
-
-(defun map-entries-to-org-mode (list)
-  (nreverse
-   (let ((acc))
-     (dolist (element list acc)
-       (push (map-entry-to-orgmode element) acc)))))
-
-(map-entries-to-org-mode parsed-entries)
+(setq org-mode-entries
+      (map-entries-to-org-mode parsed-entries 20))
 
 (provide 'good-reader-to-org)
 ;;; good-reader-to-org.el ends here

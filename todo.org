@@ -86,6 +86,7 @@ Working Solution.
 (gui-set-selection 'CLIPBOARD "copied to clipboard from Emacs")
 #+END_SRC
 
+
 ** Extract Header Information
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 14:59]--[2020-05-24 Sun 15:41] =>  0:42
@@ -139,13 +140,22 @@ CLOCK: [2020-05-24 Sun 15:41]--[2020-05-24 Sun 16:32] =>  0:51
 CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 :END:
 
-- [ ] render simple headers and list items
-- [ ] wrap code segments to get them highlighed
-- [ ] prefix page number for items 
-- [ ] translate page link using the actual page that the first page is on
+- [X] wrap code segments to get them highlighed
+- [X] prefix page number for items 
+- [X] translate page link using the actual page that the first page is on
+- [X] render simple headers and list items
 
 
+** Extra Features
 
+- [X] collect page numbers and put them in front of every item
+- [ ] if possible link to a local PDF document
+- [X] use clipboard as input and copy rendered string to clipboard
+
+*** Resources 
+
+- [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
+  
 ** HOLD Make [[*Clipboard Interaction][Clipboard Interaction]] Work in All Cases
 
 When text is copied from inside Emacs results contain additional info about copied text,.
@@ -154,12 +164,7 @@ May not need since most likely we'll copy this from outside Emacs.
 
 - [ ] pull out text from result in those cases
   
-  
-** Extra Features
 
-- [X] collect page numbers and put them in front of every item
-- [ ] if possible link to a local PDF document
+ 
 
-*** Resources 
 
-- [[https://discussions.apple.com/thread/3215851][using AppleScript to open file in Preview at certain page]] 
