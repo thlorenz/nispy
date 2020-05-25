@@ -149,8 +149,9 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 ** Extra Features
 
 - [X] collect page numbers and put them in front of every item
-- [ ] if possible link to a local PDF document
+- [X] pass page offset to interactive function
 - [X] use clipboard as input and copy rendered string to clipboard
+- [ ] link to a local PDF document including page
 
 *** Resources 
 

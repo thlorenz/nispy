@@ -91,23 +91,16 @@
                       (getf entry :content))))
           entries :initial-value ""))
 
-(defun nispy-good-reader->org-mode ()
-  (interactive)
+(defun nispy-good-reader->org-mode (page-offset)
+  (interactive "nEnter Page Offset: ")
   (let (original-string lines entries org-mode-entries rendered-string)
     (setq original-string (gui-get-selection 'CLIPBOARD))
     (setq lines (non-empty-lines original-string))
     (setq entries (parse-annotation-lines lines))
-    (setq org-mode-entries (map-entries-to-org-mode entries 22))
+    (setq org-mode-entries (map-entries-to-org-mode entries page-offset))
     (setq rendered-string (org-entries->string org-mode-entries))
     (message "Formatted notes are in your clipboard.")
     (gui-set-selection 'CLIPBOARD rendered-string)))
-
-
-;;; Test
-(setq parsed-entries (parse-annotation-lines lines))
-
-(setq org-mode-entries
-      (map-entries-to-org-mode parsed-entries 20))
 
 (provide 'good-reader-to-org)
 ;;; good-reader-to-org.el ends here
