@@ -9,7 +9,39 @@ Working on elisp links that scroll the MacOS Preview app to the linked PDF page 
 Working on an #Emacs #Lisp script that converts annotations collected from PDF books with GoodReader
 into org-mode notes.
 
-** Configuring Emacs for Elisp
+** Open Links to PDF Version 2
+
+*** Resources
+
+**** Extracting Annotations
+
+- [[https://superuser.com/questions/466751/save-annotated-pdf-notes-as-plain-text-from-preview/497605#497605][convert annotations with skim and save as text]]
+- [[https://sourceforge.net/projects/skim-app/][skim sourceforge page]]
+  - ~brew cask install skim~
+- [[http://www.dansheffler.com/blog/2014-07-07-exporting-skim-notes/][applescript to export skim notes to markdown]]
+
+***** KILL org-noter
+
+- failed to work reliably due to epdfinfo not correctly extracting highlights and failing on underline
+- also reading PDF in Emacs is a bit hard on the eyes
+- [[https://emacs.stackexchange.com/a/48918][extract annotations/highlights with org-noter]]
+- [[https://github.com/weirdNox/org-noter][org-noter]]
+- did not find a way to do this with pdf-tools
+- [[https://github.com/rudolfochrist/interleave][related interleave package]] shows how to specify the related pdf file via [[https://github.com/rudolfochrist/interleave#multi-pdf-notes][properties]]
+
+
+**** PDF Interaction/Linking
+
+- [[https://emacs.stackexchange.com/questions/30344/how-to-link-and-open-a-pdf-file-to-a-specific-page-skim-adobe/30346#30346][org mode pdf interaction/linking via skim]] depends on [[https://orgmode.org/worg/org-contrib/org-mac-link.html][org-mac-link]] package to be installed
+- [[https://emacs.stackexchange.com/a/30345][simple function]] which defines ~pdf~ link to open links in skim
+  - most interesting ~(org-add-link-type "pdf" 'org-pdf-open nil)~, defines custom org-link type
+
+**** Specifying related PDF file inside org notes
+
+- [[http://joelmccracken.github.io/entries/org-mode-specifying-document-variables-and-keywords/][org-mode File Variables, Properties, and Keywords]]
+
+
+** DONE Configuring Emacs for Elisp
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 14:33]--[2020-05-24 Sun 14:49] =>  0:16
 CLOCK: [2020-05-24 Sun 14:15]--[2020-05-24 Sun 14:29] =>  0:14
@@ -29,7 +61,7 @@ CLOCK: [2020-05-24 Sun 14:15]--[2020-05-24 Sun 14:29] =>  0:14
   (flycheck-disabled-checkers emacs-lisp-checkdoc)))
 #+END_SRC
 
-** Get String Lines of Annotations
+** DONE Get String Lines of Annotations
 
 :LOGBOOK:
 CLOCK: [2020-05-23 Sat 18:46]--[2020-05-23 Sat 19:21] =>  0:35
@@ -90,7 +122,7 @@ Working Solution.
 (gui-set-selection 'CLIPBOARD "copied to clipboard from Emacs")
 #+END_SRC
 
-** Extract Header Information
+** DONE Extract Header Information
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 14:59]--[2020-05-24 Sun 15:41] =>  0:42
 CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
@@ -130,7 +162,7 @@ CLOCK: [2020-05-23 Sat 19:23]--[2020-05-23 Sat 20:05] =>  0:42
 (string-match "^Highlight\:" "Hghlight:") ;; => nil
 #+END_SRC
 
-** Extract Item Information
+** DONE Extract Item Information
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 15:41]--[2020-05-24 Sun 16:32] =>  0:51
 :END:
@@ -138,7 +170,7 @@ CLOCK: [2020-05-24 Sun 15:41]--[2020-05-24 Sun 16:32] =>  0:51
 - [X] proceed similarly as for header
 - [X] identify code segments, i.e. if it contains ~()~ 
 
-** Render List to Org Mode
+** DONE Render List to Org Mode
 :LOGBOOK:
 CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 :END:
@@ -148,15 +180,14 @@ CLOCK: [2020-05-24 Sun 17:14]--[2020-05-24 Sun 17:44] =>  0:30
 - [X] translate page link using the actual page that the first page is on
 - [X] render simple headers and list items
 
-** Extra Features
+** DONE Extra Features
 
 - [X] collect page numbers and put them in front of every item
 - [X] pass page offset to interactive function
 - [X] use clipboard as input and copy rendered string to clipboard
 - [X] link to a local PDF document including page
   
-  
-** Open Links to PDF
+** DONE Open Links to PDF
 :LOGBOOK:
 CLOCK: [2020-05-25 Mon 16:38]--[2020-05-25 Mon 17:08] =>  0:30
 CLOCK: [2020-05-25 Mon 16:05]--[2020-05-25 Mon 16:34] =>  0:29
