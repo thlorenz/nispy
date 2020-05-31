@@ -29,16 +29,26 @@ into org-mode notes.
 - did not find a way to do this with pdf-tools
 - [[https://github.com/rudolfochrist/interleave][related interleave package]] shows how to specify the related pdf file via [[https://github.com/rudolfochrist/interleave#multi-pdf-notes][properties]]
 
-
 **** PDF Interaction/Linking
 
 - [[https://emacs.stackexchange.com/questions/30344/how-to-link-and-open-a-pdf-file-to-a-specific-page-skim-adobe/30346#30346][org mode pdf interaction/linking via skim]] depends on [[https://orgmode.org/worg/org-contrib/org-mac-link.html][org-mac-link]] package to be installed
-- [[https://emacs.stackexchange.com/a/30345][simple function]] which defines ~pdf~ link to open links in skim
+- OUTDATED [[https://emacs.stackexchange.com/a/30345][simple function]] which defines ~pdf~ link to open links in skim
   - most interesting ~(org-add-link-type "pdf" 'org-pdf-open nil)~, defines custom org-link type
+- [[https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/][new version of org-link definition]] more flexible, i.e. set color, tooltip
 
 **** Specifying related PDF file inside org notes
 
 - [[http://joelmccracken.github.io/entries/org-mode-specifying-document-variables-and-keywords/][org-mode File Variables, Properties, and Keywords]]
+- [[https://stackoverflow.com/questions/41964712/how-does-bind-really-works][specifying buffer local variables]]
+- put the below in an org file to have ~nispy-hello~ defined as a [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Buffer_002dLocal-Variables.html][/buffer local/ variable]]
+- even though it is buffer local I was able to access it in another buffer, so it could be that /buffer-local/ means it gets set when you open the buffer
+
+#+BEGIN_SRC org
+### Local Variables:
+### eval: (make-variable-buffer-local 'nispy--hello)
+### eval: (setq nispy-hello "hello")
+### End:
+#+END_SRC
 
 
 ** DONE Configuring Emacs for Elisp

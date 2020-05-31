@@ -1,9 +1,12 @@
 ;;; good-reader-to-org.el --- Converts Good Reader Annotations to Org Mode Notes -*- lexical-binding: t; -*-
+(require 'org)
 
 (defconst *header+ "header")
 (defconst *item+ "item")
 (defconst *apple-script-template+ "
-set newPage to %d
+set posixFile to POSIX file \"%s\"
+tell application \"Finder\" to open posixFile
+
 tell application \"System Events\"
   tell process \"Preview\"
     set frontmost to true
@@ -18,7 +21,7 @@ tell application \"System Events\"
     tell window 1
       tell sheet 1
         tell text field 1
-          set value to (newPage as text)
+          set value to (%s as text)
         end tell
         tell button \"OK\"
           click
@@ -28,8 +31,15 @@ tell application \"System Events\"
   end tell
 end tell")
 
-(defun nispy--scroll-osx-preview-app-to-page (page)
-  (do-applescript (format *apple-script-template+ page)))
+(defun nispy--scroll-osx-preview-app-to-page (pdf-file page)
+  (do-applescript (format *apple-script-template+ pdf-file page)))
+
+(defvar nispy--full-path-to-pdf)
+(org-link-set-parameters
+ "pdf"
+ :follow
+ (lambda (page)
+   (nispy--scroll-osx-preview-app-to-page nispy--full-path-to-pdf page)))
 
 (defun nispy--matches-any-p (regexes string)
   (if (position-if
@@ -111,7 +121,7 @@ end tell")
            (let ((code-indicator (if (getf entry :is-code) "~" "")))
              (list :type *item+
                    :content (format
-                             "- [[elisp:(nispy--scroll-osx-preview-app-to-page %d)][%d]] %s%s%s"
+                             "- [[pdf:%d][%d]] %s%s%s"
                              (getf entry :page)
                              (- (getf entry :page) page-offset)
                              code-indicator
